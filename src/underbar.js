@@ -1,7 +1,6 @@
 (function() {
   'use strict';
   window._ = {};
-
   // Returns whatever value is passed as the argument. This function doesn't
   // seem very useful, but remember it--if a function needs to provide an
   // iterator when the user does not pass one in, this will be handy.
@@ -118,6 +117,17 @@
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+    var results = [];
+    if(Array.isArray(collection)){
+      for(var i = 0; i < collection.length; i++){
+        results.push(iterator(collection[i]));
+      }
+    }else{
+      for(var key in collection){
+        results.push(iterator(collection[key]));
+      }
+    }
+    return results;
   };
 
   /*
@@ -159,6 +169,23 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    /*
+    _.each(collection, function(item){
+      accumulator = accumulator ? iterator(accumulator, item) : item;
+    });
+    return accumulator;
+    */
+    
+    var i = 0;
+    if ( accumulator === undefined ) {
+      accumulator = collection[0];
+      i = 1;
+    }
+    for ( i; i < collection.length; i++ ) {
+      accumulator = iterator(accumulator, collection[i]);
+    }
+    return accumulator;
+    
   };
 
   // Determine if the array or object contains a given value (using `===`).
