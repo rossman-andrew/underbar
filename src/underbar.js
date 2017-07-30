@@ -337,7 +337,17 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-    
+    //input = func(arguments)
+    //output = value of running the function
+    //create an empty obj = {};
+    var alreadyRun = {};
+    return function(){
+      var argString = JSON.stringify(arguments);
+        if(!alreadyRun.hasOwnProperty(argString)) {
+          alreadyRun[argString] = func.apply(this, arguments);
+        } 
+      return alreadyRun[argString];  
+      }
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -347,6 +357,7 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    setTimeout.apply(this, arguments);
   };
 
 
