@@ -175,18 +175,28 @@
     });
     return accumulator;
     */
-    
-    var i = 0;
-    if ( accumulator === undefined ) {
-      accumulator = collection[0];
-      i = 1;
-    }
-    for ( i; i < collection.length; i++ ) {
-      accumulator = iterator(accumulator, collection[i]);
-    }
-    return accumulator;
-    
-  };
+      _.each(collection, function(item){
+        if ( accumulator === undefined ){
+          accumulator = item;
+          iterator(accumulator, item);
+        } else {
+          accumulator = iterator(accumulator, item);
+        }
+      });
+      return accumulator;
+    };
+
+    //var i = 0;
+    //if ( accumulator !== undefined ) {
+    //  accumulator = collection[0];
+    //  i = 1;
+    //}
+
+
+   // for ( i; i < collection.length; i++ ) {
+   //   accumulator = iterator(accumulator, collection[i]);
+    //}
+   
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
@@ -204,12 +214,41 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
-  };
+    //Input = entire collection
+    //Output = true or false
+    return _.reduce(collection, function(wasTrue, item){
+      if (!wasTrue) {
+        return false;
+      } 
+      return iterator === undefined ? item : !!iterator(item);
+    }, true);
+   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    // Input = entire collection
+    // Output = true or false
+    // If it's true that every item in the collection fails
+        // Have some return false
+    // If it's false that every item in the collection fails
+        // Have some return true
+    if(iterator === undefined) {
+      iterator = _.identity;
+    };
+    if (_.every( collection, function(element) {
+      return !iterator(element);
+    })) {
+      return false;
+    } else {
+      return true;
+    }
+    /* 
+    return _.every(collection, function(element){
+      return !iterator(element);
+    });
+    */
   };
 
 
@@ -231,12 +270,30 @@
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
+
+
   _.extend = function(obj) {
+    //Input = obj1, unknown amount of objects to be added
+    //Output = obj1 with all new key-value pairs that were passed through
+    for(var i = 0; i < arguments.length; i++) {
+      for(var key in arguments[i]) {
+        obj[key] = arguments[i][key];
+      }
+    }
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    for(var i = 0; i < arguments.length; i++) {
+      for(var key in arguments[i]) {
+        if(!obj.hasOwnProperty(key)){
+          obj[key] = arguments[i][key];
+        }
+      }
+    }
+    return obj;
   };
 
 
@@ -280,6 +337,7 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    
   };
 
   // Delays a function for the given number of milliseconds, and then calls
