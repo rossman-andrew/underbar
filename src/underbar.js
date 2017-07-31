@@ -236,7 +236,7 @@
         // Have some return true
     if(iterator === undefined) {
       iterator = _.identity;
-    };
+    }
     if (_.every( collection, function(element) {
       return !iterator(element);
     })) {
@@ -372,6 +372,13 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var arrCopy = array.slice();
+    var shuffledArray = [];
+    for(var i = 0; i < array.length; i++) {
+      var randomIndex = Math.floor(Math.random() * arrCopy.length);
+      shuffledArray.push(arrCopy.splice(randomIndex, 1)[0]);
+    }
+    return shuffledArray;
   };
 
 
